@@ -2,9 +2,7 @@ package com.example.lab05serivevaadin;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -25,8 +23,8 @@ public class WordPublisher {
         words.goodWords.add("like");
     }
 
-    @RequestMapping("addBad/{s}")
-    public ArrayList<String> addBadWord(@PathVariable("s") String s){
+    @PostMapping("addBad")
+    public ArrayList<String> addBadWord(@RequestBody String s){
         words.badWords.add(s);
         return words.badWords;
     }
@@ -37,8 +35,8 @@ public class WordPublisher {
         return words.badWords;
     }
 
-    @RequestMapping("addGood/{s}")
-    public ArrayList<String> addGoodWord(@PathVariable("s") String s){
+    @PostMapping("addGood")
+    public ArrayList<String> addGoodWord(@RequestBody String s){
         words.goodWords.add(s);
         return words.goodWords;
     }
@@ -49,8 +47,8 @@ public class WordPublisher {
         return words.goodWords;
     }
 
-    @RequestMapping("/proof/{s}")
-    public String proofSentence(@PathVariable("s") String s) {
+    @PostMapping("proof")
+    public String proofSentence(@RequestBody String s) {
         boolean bad = false;
         boolean good = false;
 
@@ -72,4 +70,8 @@ public class WordPublisher {
         return null;
     }
 
+    @RequestMapping("getSentence")
+    public Sentence getSentence() {
+        return (Sentence) (rabbit.convertSendAndReceive("Direct", "", ""));
+    }
 }
